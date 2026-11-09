@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 — My Goals</title>
+<style>
+:root {
+  --bg:#0b0b13;
+  --panel:#171723;
+  --panel2:#202031;
+  --accent:#a78bfa;
+  --text:#f4f2ff;
+  --muted:#9895af;
+  --border:#343047;
+  --green:#62d6a2;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.container {max-width:1100px;margin:auto;padding:35px 20px}
+header {display:flex;justify-content:space-between;align-items:center;gap:15px}
+.logo {font-size:17px;font-weight:800;letter-spacing:3px;color:var(--accent)}
+.year {font-size:13px;color:var(--muted)}
+.hero {padding:55px 0 30px}
+.hero h1 {font-size:clamp(36px,7vw,65px);margin:0;letter-spacing:-2px}
+.hero h1 span {color:var(--accent)}
+.hero p {color:var(--muted);font-size:16px;line-height:1.6}
+.stats {display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:25px 0}
+.stat,.card,.formbox,.progressbox {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:17px;
+}
+.stat {padding:23px}
+.stat .number {font-size:31px;font-weight:750}
+.stat .label {font-size:12px;color:var(--muted);margin-top:8px}
+.progressbox {padding:22px;margin-bottom:28px}
+.progresshead {display:flex;justify-content:space-between;margin-bottom:15px}
+.bar {height:10px;background:#302b40;border-radius:20px;overflow:hidden}
+.fill {height:100%;width:0;background:linear-gradient(90deg,#8061e8,#c5a6ff);transition:.3s}
+.formbox {padding:22px;margin-bottom:30px}
+h2 {font-size:21px}
+.formgrid {display:grid;grid-template-columns:2fr 1fr auto;gap:10px}
+input,select {
+  width:100%;background:var(--panel2);border:1px solid var(--border);
+  border-radius:10px;padding:13px;color:var(--text);font-size:14px;
+  outline:none;
+}
+input:focus,select:focus {border-color:var(--accent)}
+button {cursor:pointer;font:inherit}
+.primary {
+  border:0;background:var(--accent);color:#171021;
+  padding:13px 20px;border-radius:10px;font-weight:700;
+}
+.filters {display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filter {
+  padding:10px 15px;background:var(--panel);
+  color:var(--muted);border:1px solid var(--border);border-radius:9px;
+}
+.filter.active {background:var(--accent);color:#171021;border-color:var(--accent)}
+.cards {display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card {padding:21px;transition:.2s}
+.card:hover {border-color:#7664a7}
+.cardtop {display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tag {color:var(--accent);font-size:12px;font-weight:650}
+.card h3 {font-size:17px;line-height:1.5;margin:16px 0 22px;overflow-wrap:anywhere}
+.card.done h3 {text-decoration:line-through;color:var(--muted)}
+.actions {display:flex;gap:8px;flex-wrap:wrap}
+.action {
+  background:var(--panel2);color:var(--text);border:1px solid var(--border);
+  border-radius:8px;padding:9px 12px;font-size:12px;
+}
+.action:hover {border-color:var(--accent)}
+.complete {color:var(--green)}
+.delete {color:#ff929d}
+.empty {color:var(--muted);padding:30px;text-align:center;grid-column:1/-1}
+footer {text-align:center;color:var(--muted);font-size:12px;padding:45px 0}
+@media(max-width:700px) {
+ .stats {grid-template-columns:repeat(2,1fr)}
+ .cards {grid-template-columns:1fr}
+ .formgrid {grid-template-columns:1fr}
+ .container {padding:22px 15px}
+ .hero {padding-top:40px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <div class="logo">VISION / 2026</div>
+  <div class="year">PERSONAL GOALS TRACKER</div>
+</header>
+
+<section class="hero">
+  <h1>My Goals<span>.</span></h1>
+  <p>Мої цілі до кінця 2026 року.<br>Маленькі кроки. Великі результати.</p>
+</section>
+
+<section class="stats">
+  <div class="stat"><div class="number" id="total">0</div><div class="label">УСЬОГО ЦІЛЕЙ</div></div>
+  <div class="stat"><div class="number" id="completed">0</div><div class="label">ВИКОНАНО</div></div>
+  <div class="stat"><div class="number" id="remaining">0</div><div class="label">ЗАЛИШИЛОСЯ ЦІЛЕЙ</div></div>
+  <div class="stat"><div class="number" id="days">0</div><div class="label">ДНІВ ДО 2027</div></div>
+</section>
+
+<section class="progressbox">
+  <div class="progresshead">
+    <strong>Загальний прогрес</strong>
+    <strong id="percent">0%</strong>
+  </div>
+  <div class="bar"><div class="fill" id="progress"></div></div>
+</section>
+
+<section class="formbox">
+  <h2>+ Нова ціль</h2>
+  <div class="formgrid">
+    <input id="goalInput" placeholder="Напиши свою ціль..." maxlength="200">
+    <select id="category">
+      <option>Фінанси</option>
+      <option>YouTube</option>
+      <option>Програмування</option>
+      <option>Спорт</option>
+      <option>Навчання</option>
+      <option>Трейдинг</option>
+      <option>Саморозвиток</option>
+      <option>Інше</option>
+    </select>
+    <button class="primary" onclick="addGoal()">Додати +</button>
+  </div>
+</section>
+
+<h2>Мої цілі</h2>
+<div class="filters" id="filters"></div>
+<div class="cards" id="cards"></div>
+
+<footer>VISION 2026 · CREATE YOUR FUTURE</footer>
+</div>
+
+<script>
+const STORAGE_KEY = "vision2026_goals_v1";
+
+const starter = [
+ ["Заробити перші $100–500 власними проєктами","Фінанси"],
+ ["Знайти джерело власного доходу","Фінанси"],
+ ["Навчитися вести бюджет","Фінанси"],
+ ["Опублікувати 15–25 відео","YouTube"],
+ ["Покращити монтаж відео","YouTube"],
+ ["Проаналізувати статистику каналу","YouTube"],
+ ["Удосконалити власний календар MTC","Програмування"],
+ ["Створити 1–2 нові сайти","Програмування"],
+ ["Покращити знання HTML, CSS та JavaScript","Програмування"],
+ ["Регулярно тренуватися 3–4 рази на тиждень","Спорт"],
+ ["Покращити витривалість","Спорт"],
+ ["Дотримуватися режиму сну","Спорт"],
+ ["Займатися англійською щодня","Навчання"],
+ ["Повторити основи математики","Навчання"],
+ ["Прочитати дві книги","Навчання"],
+ ["Вивчити структуру трендів HH, HL, LH, LL","Трейдинг"],
+ ["Провести 30 навчальних демоугод","Трейдинг"],
+ ["Створити журнал аналізу угод","Трейдинг"],
+ ["Дотримуватися щоденного розкладу","Саморозвиток"],
+ ["Планувати кожен тиждень","Саморозвиток"],
+ ["Щотижня аналізувати результати","Саморозвиток"]
+];
+
+let goals;
+try {
+ const saved = localStorage.getItem(STORAGE_KEY);
+ goals = saved === null
+   ? starter.map(([title,category])=>({
+       id:crypto.randomUUID(),title,category,done:false
+     }))
+   : JSON.parse(saved);
+ if (!Array.isArray(goals)) throw new Error("Invalid data");
+} catch(e) {
+ goals = starter.map(([title,category])=>({
+   id:crypto.randomUUID(),title,category,done:false
+ }));
+}
+let currentFilter = "Усі";
+
+function save() {
+ localStorage.setItem(STORAGE_KEY,JSON.stringify(goals));
+}
+function addGoal() {
+ const input=document.getElementById("goalInput");
+ const title=input.value.trim();
+ if(!title) return;
+ goals.push({
+  id:crypto.randomUUID(),
+  title,
+  category:document.getElementById("category").value,
+  done:false
+ });
+ input.value="";
+ save();render();
+}
+function toggleGoal(id) {
+ const goal=goals.find(g=>g.id===id);
+ if(goal) goal.done=!goal.done;
+ save();render();
+}
+function deleteGoal(id) {
+ if(!confirm("Видалити цю ціль?")) return;
+ goals=goals.filter(g=>g.id!==id);
+ save();render();
+}
+function editGoal(id) {
+ const goal=goals.find(g=>g.id===id);
+ if(!goal)return;
+ const updated=prompt("Редагувати ціль:",goal.title);
+ if(updated===null || !updated.trim())return;
+ goal.title=updated.trim().slice(0,200);
+ save();render();
+}
+function daysLeft() {
+ const now=new Date();
+ const end=new Date(2027,0,1);
+ return Math.max(0,Math.ceil((end-now)/86400000));
+}
+function render() {
+ const done=goals.filter(g=>g.done).length;
+ const total=goals.length;
+ const percent=total?Math.round(done/total*100):0;
+
+ document.getElementById("total").textContent=total;
+ document.getElementById("completed").textContent=done;
+ document.getElementById("remaining").textContent=total-done;
+ document.getElementById("days").textContent=daysLeft();
+ document.getElementById("percent").textContent=percent+"%";
+ document.getElementById("progress").style.width=percent+"%";
+
+ const categories=["Усі",...new Set(goals.map(g=>g.category))];
+ const filters=document.getElementById("filters");
+ filters.replaceChildren();
+
+ categories.forEach(category=>{
+  const btn=document.createElement("button");
+  btn.className="filter"+(currentFilter===category?" active":"");
+  btn.textContent=category;
+  btn.onclick=()=>{currentFilter=category;render()};
+  filters.appendChild(btn);
+ });
+
+ const cards=document.getElementById("cards");
+ cards.replaceChildren();
+ const visible=goals.filter(g=>currentFilter==="Усі"||g.category===currentFilter);
+
+ if(!visible.length) {
+  const empty=document.createElement("div");
+  empty.className="empty";
+  empty.textContent="Тут поки немає цілей.";
+  cards.appendChild(empty);
+ }
+
+ visible.forEach(goal=>{
+  const card=document.createElement("article");
+  card.className="card"+(goal.done?" done":"");
+
+  const top=document.createElement("div");
+  top.className="cardtop";
+  const tag=document.createElement("span");
+  tag.className="tag";
+  tag.textContent=goal.category;
+  const status=document.createElement("span");
+  status.className="tag";
+  status.textContent=goal.done?"✓ Виконано":"○ У процесі";
+  top.append(tag,status);
+
+  const title=document.createElement("h3");
+  title.textContent=goal.title;
+
+  const actions=document.createElement("div");
+  actions.className="actions";
+
+  function action(label,cls,callback) {
+   const btn=document.createElement("button");
+   btn.className="action "+cls;
+   btn.textContent=label;
+   btn.onclick=callback;
+   actions.appendChild(btn);
+  }
+  action(goal.done?"↶ Скасувати":"✓ Виконано","complete",()=>toggleGoal(goal.id));
+  action("Редагувати","",()=>editGoal(goal.id));
+  action("Видалити","delete",()=>deleteGoal(goal.id));
+
+  card.append(top,title,actions);
+  cards.appendChild(card);
+ });
+}
+document.getElementById("goalInput").addEventListener("keydown",e=>{
+ if(e.key==="Enter")addGoal();
+});
+save();
+render();
+</script>
+</body>
+</html>
